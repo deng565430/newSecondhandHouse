@@ -1,0 +1,22 @@
+@import "variable.styl"
+
+body, html
+  line-height: 1
+  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif, 'Droid Sans Fallback'
+  user-select: none
+  -webkit-tap-highlight-color: transparent
+  background: $color-background
+  color: $color-text
+ 
+ // 点击后水波样式
+ .ripple
+   position:absolute
+   background:rgba(0,0,0,.15)
+   border-radius:100%
+   transform:scale(0)
+ .ripple.show
+   animation:ripple .75s ease-out  
+ @keyframes ripple
+   to {
+     transform:scale(2);opacity:0
+     }
