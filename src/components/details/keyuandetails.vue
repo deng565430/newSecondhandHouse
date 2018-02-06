@@ -1,12 +1,14 @@
 <template>
   <div class="look-project">
     <div class="title">
-      <my-title :title="'房源详情'"></my-title>
+      <my-title :title="'客源详情'"></my-title>
     </div>
     <scroll ref="scroll" class="list" :beforeScroll="true" :data="msg">
       <div class="context">
         <div class="top">
-          <p>{{projectName}} <span>{{roomid}}</span></p>
+          <p class="left">购买倾向:</p>
+          <p class="center"><span>二手</span></p>
+          <p class="right">{{id}}</p>
         </div>
         <div class="middle">
           <p class="needs-name" v-if="needName">
@@ -14,56 +16,50 @@
           </p>
           <div class="middle-t">
             <div>
-              <p class="top">区域</p>
-              <p class="btm">{{region}}</p>
+              <p>区域</p>
+              <p>{{this.region}}</p>
             </div>
             <div>
-              <p class="top">总价</p>
-              <p class="btm" v-if="totalPrice">{{totalPrice + '万'}}</p>
+              <p>总价</p>
+              <p>{{totalPrice}}万</p>
             </div>
             <div>
-              <p class="top">面积</p>
-              <p class="btm">{{area}}</p>
+              <p>面积</p>
+              <p v-if="area">{{area + '平'}}</p>
             </div>
-          </div>
-          <div class="middle-tedian" v-if="features && features.length > 0">
-            <p>特点：
-              <span :key="item" v-for="item in features">{{item}}</span>
-            </p>
           </div>
           <div class="middle-m">
-            <p>单价：<span :class="price !== '(未填)' ? 'store' : ''">{{price + '元'}}</span></p>
+            <p>户型：<span :class="room !== '(未填)' ? 'store' : ''">{{huxing !== '(未填)' ? huxing + '居' : huxing}}</span></p>
             <p>用途：<span :class="type !== '(未填)' ? 'store' : ''">{{type}}</span></p>
-            <p>户型：<span :class="huxing !== '(未填)' ? 'store' : ''">{{huxing}}</span></p>
+            <p>装修：<span :class="decoration !== '(未填)' ? 'store' : ''">{{decoration}}</span></p>
           </div>
           <div class="middle-m">
             <p>楼层：<span :class="floor !== '(未填)' ? 'store' : ''">{{floor}}</span></p>
-            <p>装修：<span :class="decoration !== '(未填)' ? 'store' : ''">{{decoration}}</span></p>
-            <p>朝向：<span :class="face !== '(未填)' ? 'store' : ''">{{face}}</span></p>
+            <p>首付：<span :class="price !== '(未填)' ? 'store' : ''">{{price !== '(未填)' ? price + '万' : price}}</span></p>
           </div>
           <div class="middle-m">
-            <p>房龄：<span :class="roomAge !== '(未填)' ? 'store' : ''">{{roomAge}}</span></p>
-            <p>电梯：<span :class="elevator !== '(未填)' ? 'store' : ''">{{elevator}}</span></p>
+            <p>社保：<span :class="ensure !== '(未填)' ? 'store' : ''">{{ensure}}</span></p>
+            <p>户籍：<span :class="census !== '(未填)' ? 'store' : ''">{{census}}</span></p>
           </div>
         </div>
         <div class="bottom">
           <div class="bottom-t">
             <p>备注</p>
-            <p>{{remark}}</p>
+            <p>{{msg}}</p>
           </div>
           <div class="bottom-b">
-            <p>发布于：<span>{{createtime}}</span></p>
-            <p>发布人：<span>{{brokerName}}</span></p>
-            <p v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
-            <p v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
-            <p v-else></p>
+            <p class="flex2">发布于：<span>{{createtime}}</span></p>
+            <p class="flex1">发布人：<span>{{brokerName}}</span></p>
+            <p class="flex1" v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
+            <p class="flex1" v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
+            <p class="flex1" v-else>已停止</p>
           </div>
         </div>
       </div>
     </scroll>
-    <confirm ref="confirm" :text="confirmText" ></confirm>
-    <router-link :to="operate !== '1' ? '/secondaddkeyuan' : '/secondaddfangyuan'" ref="addImg" class="add-img" @click="addKeyuan">
-      <img v-if="operate !== '1'" :src="fabukeyuanImg" alt="">
+    <confirm ref="confirm" :text="confirmText" @confirm="confirm"></confirm>
+    <router-link :to="operate === '1' ? '/secondaddkeyuan' : '/secondaddfangyuan'" ref="addImg" class="add-img" @click="addKeyuan">
+      <img v-if="operate === '1'" :src="fabukeyuanImg" alt="">
       <img v-else :src="fabufangyuanImg" alt="">
     </router-link>
   </div>
@@ -72,41 +68,38 @@
 import MyTitle from 'base/title/title'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
-import { getRoomDetails, updateClientSourceStatus } from 'api/details'
+import { getsourcedetails, updateClientSourceStatus } from 'api/keyuandetails'
 export default {
   data () {
     return {
       contactphone: require('common/image/contactphone.png'),
       fabukeyuanImg: require('common/image/sendkeyuanyuanbtn.jpg'),
       fabufangyuanImg: require('common/image/sendfangyuanbtn.jpg'),
-      phone: this.$route.query.phone,
-      name: this.$route.query.name,
+      id: this.$route.query.id,
       operate: this.$route.query.operate,
       confirmText: '',
       region: '',
       totalPrice: '',
       area: '',
-      features: [],
       price: '',
-      type: '',
       huxing: '',
-      floor: '',
-      decoration: '',
-      face: '',
-      roomAge: '',
-      remark: '',
-      createTime: '',
-      brokerName: '',
-      projectName: '',
-      brokerPhone: '',
-      elevator: '',
-      roomid: '',
       isMy: '',
-      id: ''
+      brokerName: '',
+      brokerPhone: '',
+      type: '',
+      scale: '',
+      room: '',
+      census: '',
+      floor: '',
+      ensure: '',
+      decoration: '',
+      msg: '',
+      createtime: '',
+      needName: null
     }
   },
   created () {
-    this._getRoomDetails()
+    this._getsourcedetails()
   },
   methods: {
     telPhone (phone) {
@@ -119,7 +112,8 @@ export default {
     },
     confirm() {
       if (this.confirmText === '确定停止此项目？') {
-        updateClientSourceStatus({id: this.roomid, operate: this.operate, status: 0}).then(res => {
+        updateClientSourceStatus({id: this.id, operate: this.operate, status: 0}).then(res => {
+          console.log(res)
           if (res.data.code === 0) {
             this.confirmText = '停止成功！'
             this.$refs.confirm.show()
@@ -128,35 +122,33 @@ export default {
         })
       }
     },
-    _getRoomDetails () {
-      getRoomDetails({phone: this.phone, name: this.name}).then(res => {
+    _getsourcedetails () {
+      getsourcedetails({id: this.id}).then(res => {
         console.log(res)
         if (res.data.code === 0) {
+          console.log(res.data)
           if (res.data.data == null) {
             this.confirmText = '参数错误'
             this.$refs.confirm.show()
             return
           }
-          const data = res.data.data
-          this.region = data.region
-          this.totalPrice = data.totalPrice
-          this.area = data.area
-          this.features = data.features
-          this.price = data.price || '(未填)'
-          this.type = data.type || '(未填)'
-          this.huxing = data.huxing || '(未填)'
-          this.floor = data.floor || '(未填)'
-          this.decoration = data.decoration || '(未填)'
-          this.face = data.face || '(未填)'
-          this.roomAge = data.roomAge || '(未填)'
-          this.remark = data.remark || '(未填)'
-          this.createTime = data.createTime || '(未填)'
-          this.brokerName = data.brokerName || '(未填)'
-          this.projectName = data.name || '(未填)'
-          this.brokerPhone = data.brokerPhone || '(未填)'
-          this.elevator = data.elevator || '(未填)'
-          this.roomid = data.roomid
-          this.isMy = data.isMy
+          this.region = res.data.data.region
+          this.area = res.data.data.area
+          this.totalPrice = res.data.data.totalPrice
+          this.price = res.data.data.price || '(未填)'
+          this.type = res.data.data.type
+          this.huxing = res.data.data.huxing
+          this.isMy = res.data.data.isMy
+          this.scale = res.data.data.scale ? res.data.data.scale + '万' : '(未填)'
+          this.room = res.data.data.room || '(未填)'
+          this.census = res.data.data.census || '(未填)'
+          this.floor = res.data.data.floor || '(未填)'
+          this.ensure = res.data.data.ensure || '(未填)'
+          this.decoration = res.data.data.decoration || '(未填)'
+          this.msg = res.data.data.remark
+          this.createtime = res.data.data.createTime
+          this.brokerName = res.data.data.brokerName
+          this.brokerPhone = res.data.data.brokerPhone
         }
       })
     }
@@ -190,25 +182,26 @@ export default {
   .list
     position: fixed
     top: 0
-    bottom: 125px
+    bottom: 55px
     width: 100%
     padding-top: 50px
     .context
       .top
-        padding: 0 10px
-        background: #fff
-        line-height: 60px
-        font-size: $font-size-large
-        p
-          text-align: center
+        padding: 15px 10px 5px 10px
+        display: flex
+        margin-bottom: 10px
+        color: #a7a7a7
+        .left
+          width: 20%
+        .center
+          width: 20%
           span
-            width: 5.5rem
-            overflow: hidden
-            color: #a7a7a7
-            position: absolute
-            font-size: $font-size-small
-            top: 0
-            right: 10px
+            background: #f77428
+            color: #ffffff
+            padding: 3px 15px
+        .right
+          width: 60%
+          text-align: right
       .middle
         background: #fff
         p
@@ -226,28 +219,12 @@ export default {
           border-right: 1px solid #ccc
           text-align: center
           line-height: 25px
-          font-size: $font-size-medium-x
           &:last-child
             border-right: none
-          .top
+          p
             color: #6c6c6c
-          .btm
-            color: #f77428
-      .middle-tedian
-        padding: 20px 10px
-        border-bottom: 1px solid #ccc
-        p
-          font-size: $font-size-large-x
-          color: #000
-          span
-            display: inline-block
-            border: 1px solid #0096ff
-            color: #0096ff
-            font-size: $font-size-medium
-            padding: 5px
-            margin-right: .12rem
-            margin-bottom: 5px
-            line-height: 25px
+            &:last-child
+              color: #f77428
       .middle-m
         display:flex
         padding: 0 10px
@@ -274,9 +251,11 @@ export default {
         margin: 10px 0
         padding: 10px 10px
         background: #fff
+        .flex2
+          flex: 9
+        .flex1
+          flex: 7
         p
-          flex: 1
-          width: 50%
           color: #a7a7a7
           line-height: 35px
           &:last-child
@@ -299,5 +278,5 @@ export default {
     bottom: -2px
     transition: all .3s
     img
-      width: 100%
+      width: 100%        
 </style>

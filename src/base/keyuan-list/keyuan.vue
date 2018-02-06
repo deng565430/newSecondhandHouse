@@ -2,32 +2,26 @@
   <div>
     <div class="project-list" v-if="projectList.length">
         <ul>
-          <li class="item" v-for="item in projectList">
-            <router-link :to="{path:'/detail',query:{id: `${item.roomId}`, match: `${item.match}`, contact: `${item.contact}`, ismy: `${item.ismy}`, mark: `${mark}`, count: `${item.count == null ? 0 : item.count}`}}" tag="div" >
+          <li :key="item.sourceid" class="item" v-for="item in projectList">
+            <router-link :to="{path:'/secondkeyuandetail',query:{id: `${item.sourceid}`, operate: 2}}" tag="div" >
               <div class="item-top">
-                <p>{{item.city}}</p>
-                <p>{{item.district}}</p>
-                <p>{{item.huxing}}</p>
-                <p>{{item.totalPrice ? item.totalPrice + '万' : ''}}</p>
+                <p class="left">需求名称： <span>{{item.sourceid}}</span></p>
+                <p class="right">{{item.date}}</p>
+                <div class="ismy" v-if="item.ismy === 1">
+                  <img :src="isMy" alt="">
+                </div>
               </div>
               <div class="item-center">
-                <p>{{item.username}}</p>
-                <p>{{item.phone}}</p>
-                <p>{{item.type}}</p>
-                <p class="is-contact" v-if="item.ismy === 0"><img v-if="item.contact !== 0" :src="secondhousegou" alt=""> <span v-if="item.contact !== 0">已联系</span></p>
-              </div>
-              <div class="item-bottom">
-                <p v-if="item.refuse === 1" style="color: #dc4900">被拒绝</p>
-                <p v-else-if="item.count">总响应 <span> {{item.countAll}}</span> 人 已匹配 <span> {{item.count}} </span>人</p>
-                <p v-else style="color: #dc4900">等待响应...</p>
-                <p v-if="item.ismy === 0">
-                  <span v-if="item.contact === 0" class="btn bgc" @click.stop="sendMsg(item.roomId)">{{'联系TA'}} <i class="icon-phone"></i></span>
-                  <span v-else-if="item.match === 0" style="color:red">等待回复</span>
-                  <span v-else-if="item.match === 1" style="color:green">查看回复</span>
-                </p>
-                <p v-else>
-                  <span style="color: yellowgreen">我的项目</span>
-                </p>
+                <div class="left">
+                  <p class="describe">目标区域：<span>{{item.addr}}</span></p>
+                  <p class="describe">需求面积：<span v-if="item.area">{{item.area + '㎡'}}</span></p>
+                  <p class="describe">{{item.remark}}</p>
+                </div>
+                <div class="right">
+                  <p class="total-price">{{item.totalPrice + '万'}}</p>
+                  <p class="type">{{item.type}}</p>
+                  <p class="send" v-if="item.phone" @click.stop.prevent="telPhone(item.phone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
+                </div>
               </div>
             </router-link>
           </li>
@@ -37,12 +31,6 @@
 </template>
 
 <script type="text/ecmascript-6">
- /* 匹配-0未匹配-1已匹配
-    private Integer match;
-    /**联系-0未联系-1已联系
-    private Integer contcat;
-    /**0-别人的需求-1我的需求
-    private Integer ismy; */
   export default {
     props: {
       projectList: {
@@ -56,12 +44,19 @@
     },
     data () {
       return {
-        secondhousegou: require('common/image/secondhousegou.png')
+        secondhousegou: require('common/image/secondhousegou.png'),
+        contactphone: require('common/image/contactphone.png'),
+        isMy: require('common/image/ismy.png'),
+        remark: 1
       }
     },
     methods: {
       sendMsg (id) {
         this.$emit('alertMsg', id)
+      },
+      telPhone(phone) {
+        if (!phone) return
+        window.location.href = `tel:${phone}`
       }
     }
   }
@@ -73,57 +68,68 @@
   .project-list
     .item
       background: #fff
-      margin: 0 5px 10px 5px
-      padding: 10px
-      .item-top, .item-center
-        display: flex
-        p
-          width: 25%
-          line-height: 3
-          text-align: center
-          no-wrap()
-        .is-contact
-          color: #e5672c
-          img
-            color: #e5672c
-            width: 15%
-            vertical-align: text-top
-
+      margin: 0 10px 10px 10px
+      border: 1px solid #d6d6d7
+      border-radius: 3px
       .item-top
-        p
-          font-size: $font-size-medium
-      .item-center
-        p
-          font-size: $font-size-small
-      .item-bottom
+        background: #d6d6d7
         display: flex
-        >p
-          width: 50%
-        p:first-child
+        padding: 0 10px
+        position: relative
+        .left, .right
           line-height: 3
-          font-size: $font-size-small
-          text-align: left
-          padding-left: 18px
+          font-size: $font-size-medium
+          no-wrap()
+          width: 65%
+          span
+            color: #f26b3d
+        .right
+          width: 35%
+          text-align: right
+        .ismy
+          position: absolute
+          left: -3px
+          top: -3px
+          img
+            width: 40px
+    .item-center
+      display: flex
+      .left
+        width: 70%
+        padding: 10px
+        .describe
+          line-height: 25px
+          color: #8a8a8a
           no-wrap()
           span
-            color: #e5672c
-        p:last-child
-          box-sizing: border-box
-          padding-top: 10px
-          span
-            float: right
-            margin: 0 5px
+            color: #000
+      .right
+        width: 30%
+        padding-top: 25px
+        text-align: center
+        position: relative
+        .total-price
+          color: #fe5d00
+          font-size: $font-size-large
+          line-height: 30px
+        .type
+          color: #8a8a8a
+        .is-my
+          position: absolute
+          top: -13px
+          right: 5px
+          img
+            width: 35px
+        .send
           .btn
+            margin: 10px 0
             display: inline-block
-            padding: 5px 10px
-            border-radius: 4px
-            border: 1px solid black
-            i
-              color: #000
+            padding: 3px 12px
+            line-height: 25px
+            border-radius: 3px
           .bgc
-            background: #e5672c
-            border: 1px solid #e5672c
+            background: #fe5d00
             color: #fff
-            i
-              color: #fff
+            img
+              width: 12px
 </style>

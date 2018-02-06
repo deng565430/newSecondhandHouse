@@ -1,9 +1,13 @@
 <template>
   <div class="recommend-list-right">
-    <router-link tag="ul" :to="{path: '/detail', query: {phone: childItem.phone, name: childItem.name, operate: 1 }}" :key="childItem.name" v-for="childItem in projectList" class="list">
+    <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: childItem.phone, name: childItem.name, operate: 1 }}" :key="childItem.name" v-for="childItem in projectList" class="list">
       <li class="left">
+        <div class="matching">
+          <p>匹配度</p>
+          <p>90%</p>
+        </div>
         <p class="describe">{{childItem.remark}}</p>
-        <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span>{{childItem.area}}</span></p>
+        <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span v-if="childItem.area">{{childItem.area + '㎡'}}</span></p>
         <p class="addr"><span>{{childItem.name}}</span><span>{{childItem.type}}</span></p>
         <p class="type"><span :key="features" v-if="features" v-for="features in childItem.features">{{features}}</span></p>
       </li>
@@ -50,7 +54,24 @@ export default {
       .left
         flex: 3
         max-width: 75%
-        p
+        min-width: 75%
+        position: relative
+        .matching
+          position: absolute
+          right: 0
+          top: 20px
+          border-radius: 50%
+          overflow: hidden
+          border: 1px solid #f7722a
+          width: 75px
+          height: 75px
+          box-sizing: border-box
+          text-align: center
+          padding: 21px 0
+          font-size: $font-size-large
+          p
+            color: #f7722a
+        >p
           line-height: 25px
           color: #8a8a8a
         .describe
@@ -66,6 +87,8 @@ export default {
         .addr
           span
             margin-right: 15px
+            &:last-child
+              min-width: 2rem
         .type
           span
             display: inline-block
@@ -76,6 +99,7 @@ export default {
             border: 1px solid #0096ff
       .right
         min-width: 25%
+        max-width: 25%
         padding-top: 25px
         text-align: right
         position: relative

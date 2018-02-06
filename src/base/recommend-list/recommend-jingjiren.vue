@@ -19,7 +19,7 @@
           @scrollToEnd="scrollToEnd"
           >
           <div>
-            <router-link tag="ul" :to="{path: '/detail', query: {phone: item.phone, name: childItem.name, operate: 1 }}" v-if="item.child && item.child.length > 0" :key="childItem.name" v-for="childItem in item.child" class="list">
+            <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: item.phone, name: childItem.name, operate: 1, index }}" v-if="item.child && item.child.length > 0" :key="childItem.name" v-for="childItem in item.child" class="list">
               <li class="left">
                 <p class="describe">{{childItem.remark}}</p>
                 <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span>{{childItem.area}}</span></p>
@@ -27,8 +27,8 @@
                 <p class="type"><span :key="features" v-for="features in childItem.features">{{features}}</span></p>
               </li>
               <li class="right">
-                <p class="total-price">{{childItem.totalPrice + '万'}}</p>
-                <p class="price">{{childItem.price + '/m'}}</p>
+                <p class="total-price" v-if="childItem.totalPrice">{{childItem.totalPrice + '万'}}</p>
+                <p class="price" v-if="childItem.price">{{childItem.price + '元/m²'}}</p>
                 <p class="send" @click.stop.prevent="telPhone(childItem.phone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
               </li>
             </router-link>
@@ -68,6 +68,7 @@ export default {
   },
   methods: {
     isShow(item, index, showMore) {
+      console.log(showMore)
       this.index = index
       this.phone = item.phone
       this.projectList[index].showMore = !showMore
@@ -75,8 +76,7 @@ export default {
     },
     // 滚动开始
     beforeScrollStart() {
-      console.log('开始滚动')
-      this.$emit('childStartScroll', '滚动开始')
+      this.$emit('childStartScroll')
     },
     // 滚动结束
     scrollToEnd() {
@@ -167,6 +167,7 @@ export default {
           line-height: 25px
           color: #8a8a8a
         .describe
+          color: #000
           overflow: hidden
           white-space: nowrap
           text-overflow: ellipsis
@@ -179,9 +180,12 @@ export default {
         .addr
           span
             margin-right: 15px
+            &:last-child
+              min-width: 2rem
         .type
           span
             display: inline-block
+            font-size: $font-size-small-s
             padding: 5px
             margin: 2px
             line-height: 1
@@ -195,6 +199,8 @@ export default {
           color: #fe5d00
           font-size: $font-size-large-x
           line-height: 30px
+        .price
+          color: #8a8a8a  
         .send
           .btn
             margin: 10px 0

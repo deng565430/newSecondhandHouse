@@ -2,7 +2,7 @@
 <div id="recommendList">
   <div class="title">
     <my-title :title="'二手房客源'"></my-title>
-      <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
+      <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
         <p>我的 <i class="icon-people2"></i></p>
       </router-link>
       <div class="item-bottom">
@@ -41,15 +41,18 @@
     <div>
       <keyuan-list v-if="!recommendListRight" @childEndScroll="childEndScroll" @childStartScroll="childStartScroll" :projectList="projectList" @mark="sendData.mark" :mark="sendData.mark"></keyuan-list>
       <loading v-show="hasMore" title=""></loading>
-        <div v-show="!hasMore" class="no-result-wrapper">
-          <p>{{noResultWrapper}}</p>
-        </div>
+      <div v-show="!hasMore" class="no-result-wrapper">
+        <p>{{noResultWrapper}}</p>
+      </div>
+      <div v-if="showNoProjectImg" class="no-project">
+        <img :src="sorryNoProject" alt="">
+      </div>
     </div>
   </scroll>
   <div>
    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm" @cancel="cancel"></confirm>
   </div>
-  <router-link to="/addfangyuan" class="add-img" @click="addKeyuan">
+  <router-link to="/secondaddfangyuan" class="add-img" @click="addKeyuan">
     <img :src="fabufangyuanImg" alt="">
   </router-link>
 </div>
@@ -76,6 +79,8 @@ export default {
   data () {
     return {
       fabufangyuanImg: require('common/image/sendfangyuanbtn.jpg'),
+      sorryNoProject: require('common/image/sorrynoproject.png'),
+      showNoProjectImg: false,
       recommendListRight: false,
       houseListActive: 0,
       projectId: '',
@@ -96,8 +101,14 @@ export default {
       showTypeList: false,
       selectTypeIndexRoom: -1,
       typeList: [],
-      totalPrice: [],
-      areaList: [],
+      totalPrice: [{
+        key: null,
+        value: '全部'
+      }],
+      areaList: [{
+        key: null,
+        value: '全部'
+      }],
       room: null,
       sendData: {
         /* 省 */
@@ -106,16 +117,13 @@ export default {
         city: null,
         /* 区 */
         district: null,
-        /* 室 */
-        room: null,
-        /* 总价 */
-        minPrice: null,
-        maxPrice: null,
-        /* 开始 */
+        /* 价格 */
+        price: null,
+        /* 面积 */
+        area: null,
         start: 0,
         /* 长度 */
-        length: 10,
-        mark: 1
+        length: 20
       },
       saveDataType: null
     }
@@ -125,24 +133,13 @@ export default {
     getfilter().then(res => {
       console.log(res)
       if (res.data.code === 0) {
-        this.totalPrice = res.data.data.price
-        this.areaList = res.data.data.area
+        this.totalPrice = this.totalPrice.concat(res.data.data.price)
+        this.areaList = this.areaList.concat(res.data.data.area)
       }
     })
-    this._getsourceitem()
+    this._getsourceitem({}, true)
   },
   methods: {
-    // 子元素触发滚动
-    childStartScroll(data) {
-      this.$refs.scroll.disable()
-      setTimeout(() => {
-        this.$refs.scroll.enable()
-      })
-    },
-    // 子元素滚动结束
-    childEndScroll() {
-      this.$refs.scroll.enable()
-    },
     // 区域条件筛选
     selectTypeList (item, index) {
       this.itemSelectTypeActive = index
@@ -171,22 +168,34 @@ export default {
     },
     // 确定选择
     selectTypeConfirm () {
-      console.log(this.saveDataType)
       if (!this.saveDataType) {
+        if (this.itemSelectTypeActive === 1) {
+          this.sendData.area = null
+        } else {
+          this.sendData.price = null
+        }
         this.itemSelectType[this.itemSelectTypeActive].type = itemSelectType[this.itemSelectTypeActive].type
       } else {
+        if (this.itemSelectTypeActive === 1) {
+          this.sendData.area = this.saveDataType.key
+        } else {
+          this.sendData.price = this.saveDataType.key
+        }
         this.itemSelectType[this.itemSelectTypeActive].type = this.saveDataType.value
       }
       this.selectTypeIndexRoom = -1
       this.saveDataType = null
       this.showTypeList = false
+      this.projectList = []
+      this.sendData.start = 0
+      this._getsourceitem(this.sendData, true)
     },
     // 选择的省市区
     showCitysListEvent (data) {
       // 保存省市区
-      this.sendData.prov = data.provinceActive
-      this.sendData.city = data.cityActive
-      this.sendData.district = data.districtlistActive
+      this.sendData.prov = data.provinceActive !== '全部' ? (data.provinceActive !== '' ? data.provinceActive : null) : null
+      this.sendData.city = data.cityActive !== '全部' ? (data.cityActive !== '' ? data.cityActive : null) : null
+      this.sendData.district = data.districtlistActive !== '全部' ? (data.districtlistActive !== '' ? data.districtlistActive : null) : null
       if (data.districtlistActive !== '' && data.districtlistActive !== '全部' && data.districtlistActive !== null) {
         this.itemSelectType[this.itemSelectTypeActive].type = data.districtlistActive
       } else if (data.cityActive !== '' && data.cityActive !== '全部' && data.cityActive !== null) {
@@ -197,19 +206,40 @@ export default {
         this.itemSelectType[this.itemSelectTypeActive].type = '区域'
       }
       this.showCitysList = false
+      this.projectList = []
+      this.sendData.start = 0
+      this._getsourceitem(this.sendData, true)
     },
     confirm () {},
     cancel () {},
     // 下拉加载
     searchMore () {
+      if (this.showNoProjectImg) {
+        return
+      }
+      if (this.noResultWrapper === '没有更多了') {
+        return
+      }
       this.hasMore = true
       this.sendData.start ++
+      this._getsourceitem(this.sendData)
     },
-    _getsourceitem() {
-      getsourceitem().then(res => {
+    _getsourceitem(data, isFirst) {
+      this.showNoProjectImg = false
+      this.hasMore = true
+      getsourceitem(data).then(res => {
         console.log(res)
         if (res.data.draw === 0) {
-          this.projectList = res.data.data
+          this.hasMore = false
+          if (res.data.data.length === 0) {
+            if (isFirst) {
+              this.noResultWrapper = ''
+              this.showNoProjectImg = true
+            } else {
+              this.noResultWrapper = '没有更多了'
+            }
+          }
+          this.projectList = this.projectList.concat(res.data.data)
         }
       })
     }
@@ -260,8 +290,6 @@ export default {
         background: #fff
         .pop-list-child
           li
-            display: inline-block
-            width: 33.33%
             line-height: 35px
             text-align: center
             color: #7b7b7b
@@ -304,6 +332,7 @@ export default {
             font-size: $font-size-medium
         .active
           color: #e5672c
+          border-bottom: 1px solid #e5672c
     .no-result-wrapper
       text-align: center
       z-index: 800
@@ -312,6 +341,16 @@ export default {
     .add-img
       position: fixed
       bottom: -2px
+      img
+        width: 100%
+    .no-project
+      padding: 4rem
+      img
+        width: 100%
+    .add-img
+      position: fixed
+      bottom: -2px
+      transition: all .3s
       img
         width: 100%
 </style>

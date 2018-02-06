@@ -2,7 +2,7 @@
 <div id="recommendList">
   <div class="title" ref="title">
     <my-title :title="'房源市场'"></my-title>
-    <router-link tag="div" :to="{ path: '/projectlist' }" class="my-list">
+    <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
       <p>我的 <i class="icon-people2"></i></p>
     </router-link>
     <div class="item-bottom">
@@ -58,7 +58,7 @@
   <div>
    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm" @cancel="cancel"></confirm>
   </div>
-  <router-link to="/addkeyuan" ref="addImg" class="add-img" @click="addKeyuan">
+  <router-link to="/secondaddkeyuan" ref="addImg" class="add-img" @click="addKeyuan">
     <img :src="fabukeyuanImg" alt="">
   </router-link>
 </div>
@@ -199,7 +199,13 @@ export default {
     },
     // 监听滚动事件
     scroll(pos) {
-      console.log()
+      if (pos.y === 0) {
+        if (!this.isShowBtn) {
+          this.$refs.title.style.top = '0'
+          this.$refs.addImg.$el.style.bottom = '-2px'
+        }
+        this.isShowBtn = true
+      }
       if ((this.posY - pos.y) >= 40) {
         if (this.isShowBtn) {
           this.$refs.title.style.top = '-91px'
@@ -276,7 +282,6 @@ export default {
       this.selectTypeIndexRoom = -1
       this.saveDataType = null
       this.showTypeList = false
-      console.log(this.sendData)
       this.selectData()
     },
     // 选择的省市区
@@ -294,7 +299,6 @@ export default {
       } else {
         this.itemSelectType[this.itemSelectTypeActive].type = '区域'
       }
-      console.log(data)
       this.showCitysList = false
       this.selectData()
     },
@@ -312,7 +316,7 @@ export default {
         if (flag) {
           this.recommendListRight = false
         }
-        this._getbroker(this.sendData, true, true)
+        this._getbroker(this.sendData, true)
       }
     },
     confirm () {
@@ -342,7 +346,7 @@ export default {
       }
     },
     // 首次获取更多数据 flag 是不是首次获取数据
-    _getbroker(data, flag, isFirst) {
+    _getbroker(data, flag) {
       this.showNoProjectImg = false
       this.hasMore = true
       getbroker(data).then(res => {
@@ -361,7 +365,7 @@ export default {
               this._getroomListbyphone({phone: res.data.data[0].phone}, 0)
             }
           } else {
-            if (isFirst) {
+            if (flag) {
               this.noResultWrapper = ''
               this.showNoProjectImg = true
             } else {
@@ -423,6 +427,20 @@ export default {
       })
     }
   },
+  beforeRouteEnter (to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不！能！获取组件实例 `this`
+    // 因为当守卫执行前，组件实例还没被创建
+    let index = null
+    if (from.name === 'detail') {
+      index = from.query.index
+    }
+    next(vm => {
+      if (index != null) {
+        vm.projectList[index].showMore = true
+      }
+    })
+  },
   components: {
     MyTitle,
     Scroll,
@@ -471,8 +489,6 @@ export default {
         background: #fff
         .pop-list-child
           li
-            display: inline-block
-            width: 33.33%
             line-height: 35px
             text-align: center
             color: #7b7b7b
@@ -515,6 +531,7 @@ export default {
             font-size: $font-size-medium
         .active
           color: #e5672c
+          border-bottom: 1px solid #e5672c
     .tab
       display: flex
       height: 45px

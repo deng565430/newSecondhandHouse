@@ -16,6 +16,12 @@ const Details = (resolve) => {
   })
 }
 
+const KeyuanDetails = (resolve) => {
+  import('components/details/keyuandetails').then((module) => {
+    resolve(module)
+  })
+}
+
 const Addkeyuan = resolve => {
   import('components/addProject/addkeyuan').then(module => {
     resolve(module)
@@ -24,12 +30,6 @@ const Addkeyuan = resolve => {
 
 const Addfangyuan = resolve => {
   import('components/addProject/addfangyuan').then(module => {
-    resolve(module)
-  })
-}
-
-const SearchList = (resolve) => {
-  import('components/search/search').then((module) => {
     resolve(module)
   })
 }
@@ -46,33 +46,33 @@ export default [
     component: RecommendList,
     meta: { keepAlive: true }
   }, {
-    path: '/recommend',
+    path: '/secondhandhouse',
     component: RecommendList,
     meta: { keepAlive: true },
     name: 'recommendList'
   }, {
-    path: '/keyuan',
+    path: '/secondkeyuan',
     component: Keyuan,
     meta: { keepAlive: true },
     name: 'keyuan'
   }, {
-    path: '/addkeyuan',
+    path: '/secondaddkeyuan',
     name: 'addkeyuan',
     component: Addkeyuan
   }, {
-    path: '/addfangyuan',
+    path: '/secondaddfangyuan',
     name: 'addfangyuan',
     component: Addfangyuan
   }, {
-    path: '/detail',
+    path: '/seconddetail',
     name: 'detail',
     component: Details
   }, {
-    path: '/search',
-    name: 'search',
-    component: SearchList
+    path: '/secondkeyuandetail',
+    name: 'keyuandetail',
+    component: KeyuanDetails
   }, {
-    path: '/projectlist',
+    path: '/secondprojectlist',
     name: 'projectlist',
     component: MyProjectList,
     meta: { keepAlive: true }
