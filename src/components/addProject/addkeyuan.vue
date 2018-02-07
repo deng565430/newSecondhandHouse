@@ -140,7 +140,7 @@
   import Modal from 'base/modal/modal'
   import Confirm from 'base/confirm/confirm'
   import { getProvincelist, getDistirctlist, getCitylist } from 'api/getCity'
-  import { sendProject, getaddoptions } from 'api/addSelectList'
+  import { sendProject, getaddoptions, getUserbyid } from 'api/addSelectList'
   export default {
     data () {
       return {
@@ -387,9 +387,15 @@
         if (this.confirmText === '添加成功！') {
           this.$router.back()
         }
+        if (this.confirmText === '请先登录') {
+          window.location.href = '/registration'
+        }
       },
       // 取消弹框
       cancelConfirm() {
+        if (this.confirmText === '请先登录') {
+          this.$router.back()
+        }
         if (this.confirmText === '添加成功！') {
           this.price = this.filterData(this.price)
           this.area = this.filterData(this.area)
@@ -492,6 +498,15 @@
         })
       },
       _getaddoptions() {
+        getUserbyid().then(res => {
+          if (res.data.code === 0) {
+            console.log(res.data.data)
+            if (res.data.data.user.openid == null) {
+              this.confirmText = '请先登录'
+              this.$refs.confirm.show()
+            }
+          }
+        })
         getaddoptions().then(res => {
           if (res.data.code === 0) {
             this.price = this.filterData(res.data.data.price)
@@ -545,12 +560,12 @@
   width: 100%
   bottom: 0
   height: 100%
-  z-index: 10000
+  z-index: 888
   background: #eee
   font-size: $font-size-medium
   .title
     position: fixed
-    z-index: 10002
+    z-index: 900
     width: 100%
     text-align: center
     line-height: 40px

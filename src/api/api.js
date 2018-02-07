@@ -3,7 +3,6 @@ import { baseUrl } from '../config/env.js'
 
 export default {
   get: function(url, data = null) {
-    console.log(baseUrl + url)
     var result = axios({
       method: 'get',
       params: data,

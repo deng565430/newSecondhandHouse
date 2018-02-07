@@ -1,5 +1,12 @@
 import $api from './api'
 
+// 获取用户信息
+export function getUserbyid() {
+  const url = '/user/getUserbyid'
+
+  return $api.get(url)
+}
+
 // 发布客源
 export function addClientRoom(data) {
   const url = '/secondhand/addclientroom'

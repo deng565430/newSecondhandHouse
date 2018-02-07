@@ -162,7 +162,7 @@
   import Modal from 'base/modal/modal'
   import Confirm from 'base/confirm/confirm'
   import { getProvincelist, getDistirctlist, getCitylist } from 'api/getCity'
-  import { addClientRoom, getoption } from 'api/addSelectList'
+  import { addClientRoom, getoption, getUserbyid } from 'api/addSelectList'
   export default {
     data () {
       return {
@@ -426,9 +426,15 @@
         if (this.confirmText === '添加成功！') {
           this.$router.back()
         }
+        if (this.confirmText === '请先登录') {
+          window.location.href = '/registration'
+        }
       },
       // 取消弹框
       cancelConfirm() {
+        if (this.confirmText === '请先登录') {
+          this.$router.back()
+        }
         if (this.confirmText === '添加成功！') {
           this.districtRecommend = this.filterData(this.districtRecommend)
           this.features = this.filterData(this.features)
@@ -532,9 +538,17 @@
         })
       },
       _getaddoptions() {
-        getoption().then(res => {
+        getUserbyid().then(res => {
           if (res.data.code === 0) {
             console.log(res.data.data)
+            if (res.data.data.user.openid == null) {
+              this.confirmText = '请先登录'
+              this.$refs.confirm.show()
+            }
+          }
+        })
+        getoption().then(res => {
+          if (res.data.code === 0) {
             this.districtRecommend = this.filterData(res.data.data.districtRecommend)
             this.features = this.filterData(res.data.data.features)
             this.decoration = this.filterData(res.data.data.decoration)
