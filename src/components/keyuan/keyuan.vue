@@ -14,7 +14,7 @@
       <div>
         <select-box v-if="showCitysList" @hideSelectBox="hidePopBox" @showCitysListEvent="showCitysListEvent"></select-box>
       </div>
-      <pop-box v-if="showTypeList" @hidePopBox="hidePopBox" :typeList="typeList" @showPopBox="showPopBox">
+      <pop-box @selectTypeConfirm="selectTypeConfirm" v-if="showTypeList" @hidePopBox="hidePopBox" :typeList="typeList" @showPopBox="showPopBox">
         <div>
           <div class="pop-list">
             <ul class="pop-list-child" v-if="typeList.length">
@@ -22,9 +22,6 @@
                 {{item.value}}
               </li>
             </ul>
-          </div>
-          <div class="pop-city-btn">
-            <a @touchstart.prevent="selectTypeConfirm">确定选择</a>
           </div>
         </div>
       </pop-box>
@@ -297,18 +294,6 @@ export default {
           .select-type-index
             background: #f9742a
             color: white
-      .pop-city-btn
-        margin: 0 auto
-        text-align: center
-        padding-top: 5px
-        height: 50px
-        background: $color-highlight-background
-        a
-          display: inline-block
-          background #13CE66
-          color: white
-          padding: 10px 20px
-          border-radius: 6px
     .list
       position: fixed
       top: 0
