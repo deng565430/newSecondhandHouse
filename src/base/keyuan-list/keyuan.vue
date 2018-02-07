@@ -105,7 +105,6 @@
             color: #000
       .right
         width: 30%
-        padding-top: 25px
         text-align: center
         position: relative
         .total-price

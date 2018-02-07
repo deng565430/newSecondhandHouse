@@ -45,6 +45,7 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import '~common/stylus/variable'
+  @import '~common/stylus/mixin'
   .recommend-list-right
     border-top: 1px solid #ccc
     .list
@@ -106,6 +107,7 @@ export default {
         padding-top: 25px
         text-align: right
         position: relative
+        no-wrap()
         .total-price
           color: #fe5d00
           font-size: $font-size-large-x

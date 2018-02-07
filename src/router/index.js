@@ -34,12 +34,6 @@ const Addfangyuan = resolve => {
   })
 }
 
-const MyProjectList = (resolve) => {
-  import('components/projectlist/projectlist').then((module) => {
-    resolve(module)
-  })
-}
-
 export default [
   {
     path: '/',
@@ -71,10 +65,5 @@ export default [
     path: '/secondkeyuandetail',
     name: 'keyuandetail',
     component: KeyuanDetails
-  }, {
-    path: '/secondprojectlist',
-    name: 'projectlist',
-    component: MyProjectList,
-    meta: { keepAlive: true }
   }
 ]

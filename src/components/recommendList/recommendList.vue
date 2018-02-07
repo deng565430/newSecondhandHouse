@@ -400,9 +400,13 @@ export default {
             return
           }
           if (res.data.data.length < 10) {
-            this.projectList[index].hasMore = false
+            if (this.projectList && this.projectList[index]) {
+              this.projectList[index].hasMore = false
+            }
           }
-          this.projectList[index].child = this.projectList[index].child.concat(res.data.data)
+          if (this.projectList && this.projectList[index]) {
+            this.projectList[index].child = this.projectList[index].child.concat(res.data.data)
+          }
         }
       })
     },

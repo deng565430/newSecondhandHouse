@@ -58,7 +58,7 @@
       border: 1px solid #8c8c8c
       color: #8c8c8c
     .checked-style
-      border: 1px solid #ff5d00
-      background: #ff5d00
+      border: 1px solid #0066f3
+      background: #0066f3
       color: #fff
 </style>

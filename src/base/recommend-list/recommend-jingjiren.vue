@@ -74,7 +74,8 @@ export default {
       hasMore: true,
       noResultWrapper: '',
       innerWidth: window.innerWidth,
-      maxScrollY: 0
+      maxScrollY: 0,
+      timer: null
     }
   },
   methods: {
@@ -108,9 +109,12 @@ export default {
         }
       }
       if (direction === 'right') {
-        setTimeout(() => {
-          this.$refs['scroll' + this.index][0].enable()
-        }, 200)
+        console.log(this.$refs['scroll' + this.index][0].enable)
+        this.timer = setTimeout(() => {
+          if (this.$refs['scroll' + this.index][0].enable) {
+            this.$refs['scroll' + this.index][0].enable()
+          }
+        }, 20)
       }
     },
     // 滚动开始
@@ -132,6 +136,10 @@ export default {
       if (!phone) return
       window.location.href = `tel:${phone}`
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.timer = null
+    next()
   },
   components: {
     Scroll,
@@ -240,6 +248,7 @@ export default {
         min-width: 25%
         padding-top: 25px
         text-align: right
+        no-wrap()
         .total-price
           color: #fe5d00
           font-size: $font-size-large-x

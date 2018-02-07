@@ -23,7 +23,7 @@
             </div>
             <div>
               <p class="top">面积</p>
-              <p class="btm">{{area}}</p>
+              <p class="btm" v-if="area">{{area + '㎡'}}</p>
             </div>
           </div>
           <div class="middle-tedian" v-if="features && features.length > 0">
