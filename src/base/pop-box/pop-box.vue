@@ -1,9 +1,14 @@
 <template>
   <transition name="type-list">
     <div class="show-type-list" ref="showType" @click="hideEvent">
+      <div class="container">
         <scroll :pullup="pullup" class="list" :data="typeList">
           <slot></slot>
         </scroll>
+        <div class="pop-city-btn">
+          <a @touchstart.prevent="selectTypeConfirm">确定选择</a>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -56,6 +61,9 @@
           this.$emit('showPopBox', this.showTypeList)
         }
         this.touch = {}
+      },
+      selectTypeConfirm() {
+        this.$emit('selectTypeConfirm')
       }
     }
   }
@@ -71,11 +79,29 @@
     right: 0
     background: rgba(0, 0, 0, 0.3)
     z-index: 10000
+    .container
+      height: 270px
+      background: #fff
+      position: relative
+      text-align: center
     .list
       position: fixed
       width: 100%
-      height: 230px
+      height: 220px
       overflow: hidden
+    .pop-city-btn
+      position: absolute
+      bottom: -15px
+      left: 50%
+      transform: translate(-50%, -50%)
+      text-align: center
+      background: $color-highlight-background
+      a
+        display: inline-block
+        background #13CE66
+        color: white
+        padding: 10px 20px
+        border-radius: 6px  
   .type-list-enter-active, .type-list-leave-active
     transition: all 0.3s
   .type-list-enter, .type-list-leave-to

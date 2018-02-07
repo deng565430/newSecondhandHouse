@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="middle-tedian" v-if="features && features.length > 0">
-            <p>特点：
+            <p>
               <span :key="item" v-for="item in features">{{item}}</span>
             </p>
           </div>
@@ -175,12 +175,11 @@ export default {
   width: 100%
   bottom: 0
   height: 100%
-  z-index: 10000
   background: #eee
   font-size: $font-size-medium
   .title
     position: fixed
-    z-index: 10002
+    z-index: 88
     width: 100%
     text-align: center
     line-height: 40px
@@ -201,6 +200,7 @@ export default {
         font-size: $font-size-large
         p
           text-align: center
+          color: #a7a7a7
           span
             width: 5.5rem
             overflow: hidden
@@ -218,20 +218,23 @@ export default {
         line-height: 40px
       .middle-t
         display:flex
-        padding: 10px 0
         border-top: 1px solid #ccc
         border-bottom: 1px solid #ccc
-        >div
+        padding: 10px 0
+        div
           width: 33%
           border-right: 1px solid #ccc
           text-align: center
           line-height: 25px
-          font-size: $font-size-medium-x
           &:last-child
             border-right: none
           .top
+            font-size: $font-size-medium-x
             color: #6c6c6c
+            line-height: 30px
           .btm
+            font-size: $font-size-medium-x
+            line-height: 30px
             color: #f77428
       .middle-tedian
         padding: 20px 10px

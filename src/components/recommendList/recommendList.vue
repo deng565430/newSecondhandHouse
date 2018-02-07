@@ -2,9 +2,9 @@
 <div id="recommendList">
   <div class="title" ref="title">
     <my-title :title="'房源市场'"></my-title>
-    <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
+    <!-- <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
       <p>我的 <i class="icon-people2"></i></p>
-    </router-link>
+    </router-link> -->
     <div class="item-bottom">
       <ul>
         <li :key="item" v-for="(item, index) in itemSelectType" :class="itemSelectTypeActive === index ? 'active' : '' " @click="selectTypeList(item, index)"><span>{{item.type}}</span> <i :class="[itemSelectTypeActive === index ? 'icon-back-down': 'icon-back-up']"></i></li>
@@ -17,7 +17,7 @@
     <div>
       <select-box v-if="showCitysList" @hideSelectBox="hidePopBox" @showCitysListEvent="showCitysListEvent"></select-box>
     </div>
-    <pop-box v-if="showTypeList" @hidePopBox="hidePopBox" :typeList="typeList" @showPopBox="showPopBox">
+    <pop-box @selectTypeConfirm="selectTypeConfirm" v-if="showTypeList" @hidePopBox="hidePopBox" :typeList="typeList" @showPopBox="showPopBox">
       <div>
         <div class="pop-list">
           <ul class="pop-list-child" v-if="typeList.length">
@@ -25,9 +25,6 @@
               {{item.value}}
             </li>
           </ul>
-        </div>
-        <div class="pop-city-btn">
-          <a @touchstart.prevent="selectTypeConfirm">确定选择</a>
         </div>
       </div>
     </pop-box>
@@ -232,6 +229,13 @@ export default {
     },
     // 子元素滚动结束
     childEndScroll(datas) {
+      if (datas.flag === 1) {
+        this.$refs.scroll.enable()
+        return
+      } else if (datas.flag === 2) {
+        this.$refs.scroll.disable()
+        return
+      }
       const { index, ...data } = datas
       this._getroomListbyphone(data, index)
     },
@@ -379,6 +383,8 @@ export default {
     },
     // 获取单个经纪人信息
     _getroomListbyphone(data, index) {
+      console.log(this.sendData)
+      console.log({...data, ...this.sendData})
       if (this.projectList[index] && !this.projectList[index].hasMore) {
         this.projectList[index].noResultWrapper = '没有更多了'
         setTimeout(() => {
@@ -386,7 +392,7 @@ export default {
         }, 20)
         return
       }
-      getroomListbyphone(data).then(res => {
+      getroomListbyphone({...data, ...this.sendData}).then(res => {
         setTimeout(() => {
           this.$refs.scroll.refresh()
         }, 20)
@@ -485,6 +491,7 @@ export default {
             vertical-align: top
             font-size: $font-size-medium
     .pop-box
+      position: relative
       .pop-list
         background: #fff
         .pop-list-child
@@ -496,21 +503,9 @@ export default {
           .select-type-index
             background: #f9742a
             color: white
-      .pop-city-btn
-        margin: 0 auto
-        text-align: center
-        padding-top: 5px
-        height: 50px
-        background: $color-highlight-background
-        a
-          display: inline-block
-          background #13CE66
-          color: white
-          padding: 10px 20px
-          border-radius: 6px
     .list
       position: fixed
-      top: 0
+      top: -3px
       bottom: 210px
       width: 100%
       padding-top: 139px

@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="middle-m">
-            <p>户型：<span :class="room !== '(未填)' ? 'store' : ''">{{huxing !== '(未填)' ? huxing + '居' : huxing}}</span></p>
+            <p>户型：<span :class="huxing !== '(未填)' ? 'store' : ''">{{huxing !== '(未填)' ? huxing + '居' : huxing}}</span></p>
             <p>用途：<span :class="type !== '(未填)' ? 'store' : ''">{{type}}</span></p>
             <p>装修：<span :class="decoration !== '(未填)' ? 'store' : ''">{{decoration}}</span></p>
           </div>
@@ -137,7 +137,7 @@ export default {
           this.totalPrice = res.data.data.totalPrice
           this.price = res.data.data.price || '(未填)'
           this.type = res.data.data.type
-          this.huxing = res.data.data.huxing
+          this.huxing = res.data.data.huxing || '(未填)'
           this.isMy = res.data.data.isMy
           this.scale = res.data.data.scale ? res.data.data.scale + '万' : '(未填)'
           this.room = res.data.data.room || '(未填)'

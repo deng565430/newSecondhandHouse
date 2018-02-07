@@ -2,9 +2,9 @@
 <div id="recommendList">
   <div class="title">
     <my-title :title="'二手房客源'"></my-title>
-      <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
+      <!-- <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
         <p>我的 <i class="icon-people2"></i></p>
-      </router-link>
+      </router-link> -->
       <div class="item-bottom">
         <ul>
           <li :key="item" v-for="(item, index) in itemSelectType" :class="itemSelectTypeActive === index ? 'active' : '' " @click="selectTypeList(item, index)"><span>{{item.type}}</span> <i :class="[itemSelectTypeActive === index ? 'icon-back-down': 'icon-back-up']"></i></li>

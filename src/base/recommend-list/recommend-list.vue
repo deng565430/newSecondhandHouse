@@ -2,9 +2,9 @@
   <div class="recommend-list-right">
     <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: childItem.phone, name: childItem.name, operate: 1 }}" :key="childItem.name" v-for="childItem in projectList" class="list">
       <li class="left">
-        <div class="matching">
+        <div v-if="childItem.suitability" class="matching">
           <p>匹配度</p>
-          <p>90%</p>
+          <p>{{childItem.suitability}}%</p>
         </div>
         <p class="describe">{{childItem.remark}}</p>
         <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span v-if="childItem.area">{{childItem.area + '㎡'}}</span></p>
@@ -13,7 +13,7 @@
       </li>
       <li class="right">
         <p class="total-price" v-if="childItem.totalPrice">{{childItem.totalPrice + '万'}}</p>
-        <p class="price">{{childItem.price + '/m'}}</p>
+        <p class="price">{{childItem.price + '元/㎡'}}</p>
         <p class="send" @click.stop.prevent="telPhone(childItem.call)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
       </li>
     </router-link>
@@ -63,18 +63,19 @@ export default {
           border-radius: 50%
           overflow: hidden
           border: 1px solid #f7722a
-          width: 75px
-          height: 75px
+          width: 55px
+          height: 55px
           box-sizing: border-box
           text-align: center
-          padding: 21px 0
-          font-size: $font-size-large
+          padding: 13px 0
+          font-size: $font-size-medium
           p
             color: #f7722a
         >p
           line-height: 25px
           color: #8a8a8a
         .describe
+          color: black
           overflow: hidden
           white-space: nowrap
           text-overflow: ellipsis
@@ -82,6 +83,7 @@ export default {
           display: flex
         .name
           span
+            font-weight: 900
             color: black
             margin-right: 10px
         .addr
@@ -92,6 +94,7 @@ export default {
         .type
           span
             display: inline-block
+            font-size: $font-size-small-s
             padding: 5px
             margin: 2px
             line-height: 1
