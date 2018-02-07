@@ -161,7 +161,6 @@ export default {
   methods: {
     // 获取单个经纪人的数据
     getAllData(data) {
-      console.log(data)
       if (data.showMore) {
         setTimeout(() => {
           this.$refs.scroll.refresh()
@@ -383,8 +382,6 @@ export default {
     },
     // 获取单个经纪人信息
     _getroomListbyphone(data, index) {
-      console.log(this.sendData)
-      console.log({...data, ...this.sendData})
       if (this.projectList[index] && !this.projectList[index].hasMore) {
         this.projectList[index].noResultWrapper = '没有更多了'
         setTimeout(() => {
@@ -398,7 +395,6 @@ export default {
         }, 20)
         if (res.data.draw === 0) {
           if (res.data.data.length === 0) {
-            console.log(res.data.data)
             this.projectList[index].hasMore = false
             this.projectList[index].noResultWrapper = '没有更多了'
             return
@@ -406,7 +402,6 @@ export default {
           if (res.data.data.length < 10) {
             this.projectList[index].hasMore = false
           }
-          console.log(this.projectList)
           this.projectList[index].child = this.projectList[index].child.concat(res.data.data)
         }
       })
@@ -416,7 +411,6 @@ export default {
       this.showNoProjectImg = false
       this.hasMore = true
       getbroker(data).then(res => {
-        console.log(res)
         if (res.data.draw === 0) {
           this.hasMore = false
           if (res.data.data.length === 0) {

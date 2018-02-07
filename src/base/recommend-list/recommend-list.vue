@@ -116,6 +116,8 @@ export default {
           right: 5px
           img
             width: 35px
+        .price
+          color: #8a8a8a    
         .send
           .btn
             margin: 10px 0

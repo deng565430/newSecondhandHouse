@@ -21,6 +21,7 @@
           :data="item.child"
           :beforeScroll="true"
           @beforeScroll="beforeScrollStart"
+          @scroll="scroll"
           :listenScroll="true"
           :pullup="true"
           :touchEnd="true"
@@ -72,12 +73,12 @@ export default {
       phone: '',
       hasMore: true,
       noResultWrapper: '',
-      innerWidth: window.innerWidth
+      innerWidth: window.innerWidth,
+      maxScrollY: 0
     }
   },
   methods: {
     isShow(item, index, showMore) {
-      console.log(item.phone)
       this.index = index
       this.phone = item.phone
       this.projectList[index].showMore = !showMore
@@ -89,6 +90,14 @@ export default {
     },
     touchend (e) {
       this.slide(null, 'right')
+    },
+    scroll (pos) {
+      this.maxScrollY = pos.maxScrollY
+      if (this.projectList[this.index].noResultWrapper === '没有更多了' && this.maxScrollY - pos.y === 0) {
+        if (pos.movingDirectionY === 1) {
+          this.$refs['scroll' + this.index][0].disable()
+        }
+      }
     },
     // 判断左侧滑动还是右侧滑动
     slide(pageX, direction) {

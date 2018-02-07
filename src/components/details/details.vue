@@ -52,11 +52,11 @@
             <p>{{remark}}</p>
           </div>
           <div class="bottom-b">
-            <p>发布于：<span>{{createtime}}</span></p>
-            <p>发布人：<span>{{brokerName}}</span></p>
-            <p v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
-            <p v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
-            <p v-else></p>
+            <p class="flex-1">发布于：<span>{{createtime}}</span></p>
+            <p class="flex-1">发布人：<span>{{brokerName}}</span></p>
+            <p class="send-btn" v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
+            <p class="send-btn" v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
+            <p class="send-btn" v-else></p>
           </div>
         </div>
       </div>
@@ -170,6 +170,7 @@ export default {
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
+@import "~common/stylus/mixin"
 .look-project
   position: fixed
   width: 100%
@@ -246,11 +247,11 @@ export default {
             display: inline-block
             border: 1px solid #0096ff
             color: #0096ff
-            font-size: $font-size-medium
+            font-size: $font-size-small
             padding: 5px
             margin-right: .12rem
             margin-bottom: 5px
-            line-height: 25px
+            line-height: 18px
       .middle-m
         display:flex
         padding: 0 10px
@@ -277,16 +278,18 @@ export default {
         margin: 10px 0
         padding: 10px 10px
         background: #fff
-        p
-          flex: 1
-          width: 50%
+        .flex-1
+          flex: 2
           color: #a7a7a7
           line-height: 35px
+          no-wrap()
           &:last-child
             line-height: 35px
             text-align: right
           span
             color: #6c6c6c
+          .send-btn
+            flex: 1  
         .btn
           display: inline-block
           padding: 5px 10px

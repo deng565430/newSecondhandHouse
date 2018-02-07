@@ -66,6 +66,8 @@
         if (this.listenScroll) {
           let me = this
           this.scroll.on('scroll', (pos) => {
+            pos.movingDirectionY = this.scroll.movingDirectionY
+            pos.maxScrollY = this.scroll.maxScrollY
             // 监听滚动，派发滚动事件，拿到位置
             me.$emit('scroll', pos)
           })
