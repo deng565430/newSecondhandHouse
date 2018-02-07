@@ -130,6 +130,8 @@ export default {
       isShowBtn: true,
       sendDataStart: 0,
       sendFangyuanStart: 0,
+      // 是否需要下拉加载
+      isSelect: true,
       sendData: {
         /* 省 */
         prov: null,
@@ -259,7 +261,7 @@ export default {
       this.showTypeList = false
       this.showCitysList = false
     },
-    // 选择几室几厅
+    // 选择面积
     selectTypeRoom (item, index) {
       this.selectTypeIndexRoom = index
       this.room = item.type
@@ -314,7 +316,14 @@ export default {
         if (flag) {
           this.recommendListRight = true
         }
-        this._getFangyuan({start: this.sendDataStart, logo: 1, ...this.sendData}, true)
+        const hasSelect = this.hasSelect()
+        let length
+        if (hasSelect) {
+          length = 50
+        } else {
+          length = this.sendData.length
+        }
+        this._getFangyuan({start: this.sendDataStart, logo: 1, ...this.sendData, length}, true)
       } else {
         if (flag) {
           this.recommendListRight = false
@@ -334,6 +343,10 @@ export default {
     },
     // 下拉加载
     searchMore () {
+      if (this.hasSelect()) {
+        this.noResultWrapper = '没有更多了'
+        return
+      }
       if (this.showNoProjectImg) {
         return
       }
@@ -352,6 +365,7 @@ export default {
     _getbroker(data, flag) {
       this.showNoProjectImg = false
       this.hasMore = true
+      this.noResultWrapper = '下拉加载更多'
       getbroker(data).then(res => {
         if (res.data.draw === 0) {
           this.hasMore = false
@@ -414,6 +428,7 @@ export default {
     _getFangyuan(data, isFirst) {
       this.showNoProjectImg = false
       this.hasMore = true
+      this.noResultWrapper = '下拉加载更多'
       getbroker(data).then(res => {
         if (res.data.draw === 0) {
           this.hasMore = false
@@ -429,6 +444,14 @@ export default {
           this.scrollData = this.fangyuanProjectList
         }
       })
+    },
+    // 判断是不是带筛选条件。
+    hasSelect() {
+      if (this.sendData.area || this.sendData.price || this.sendData.prov || this.sendData.city || this.sendData.district) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   beforeRouteEnter (to, from, next) {

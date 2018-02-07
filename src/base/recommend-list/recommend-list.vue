@@ -3,8 +3,7 @@
     <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: childItem.phone, name: childItem.name, operate: 1 }}" :key="childItem.name" v-for="childItem in projectList" class="list">
       <li class="left">
         <div v-if="childItem.suitability" class="matching">
-          <p>匹配度</p>
-          <p>{{childItem.suitability}}%</p>
+          <p>{{childItem.suitability}}分</p>
         </div>
         <p class="describe">{{childItem.remark}}</p>
         <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span v-if="childItem.area">{{childItem.area + '㎡'}}</span></p>
@@ -68,9 +67,9 @@ export default {
           height: 55px
           box-sizing: border-box
           text-align: center
-          padding: 13px 0
           font-size: $font-size-medium
           p
+            line-height: 55px
             color: #f7722a
         >p
           line-height: 25px

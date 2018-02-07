@@ -31,8 +31,7 @@
             <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: item.phone, name: childItem.name, operate: 1, index }}" v-if="item.child && item.child.length > 0" :key="childItem.name" v-for="childItem in item.child" class="list">
               <li class="left">
                 <div v-if="childItem.suitability" class="matching">
-                  <p>匹配度</p>
-                  <p>{{childItem.suitability}}%</p>
+                  <p>{{childItem.suitability}}分</p>
                 </div>
                 <p class="describe">{{childItem.remark}}</p>
                 <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span v-if="childItem.area">{{childItem.area + '㎡'}}</span></p>
@@ -113,7 +112,6 @@ export default {
         }
       }
       if (direction === 'right') {
-        console.log(this.$refs['scroll' + this.index][0].enable)
         this.timer = setTimeout(() => {
           if (this.$refs['scroll' + this.index][0].enable) {
             this.$refs['scroll' + this.index][0].enable()
@@ -232,9 +230,9 @@ export default {
           height: 55px
           box-sizing: border-box
           text-align: center
-          padding: 13px 0
           font-size: $font-size-medium
           p
+            line-height: 55px
             color: #f7722a
         >p
           line-height: 25px

@@ -128,7 +128,6 @@ export default {
   created () {
     // 获取过滤条件
     getfilter().then(res => {
-      console.log(res)
       if (res.data.code === 0) {
         this.totalPrice = this.totalPrice.concat(res.data.data.price)
         this.areaList = this.areaList.concat(res.data.data.area)
@@ -225,7 +224,6 @@ export default {
       this.showNoProjectImg = false
       this.hasMore = true
       getsourceitem(data).then(res => {
-        console.log(res)
         if (res.data.draw === 0) {
           this.hasMore = false
           if (res.data.data.length === 0) {
