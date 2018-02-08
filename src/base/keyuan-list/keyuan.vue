@@ -95,8 +95,10 @@
     .item-center
       display: flex
       .left
-        width: 70%
-        padding: 10px
+        width: 65%
+        min-width: 65%
+        max-width: 65%
+        padding: 10px 0 10px 10px
         .describe
           line-height: 25px
           color: #8a8a8a
@@ -104,7 +106,9 @@
           span
             color: #000
       .right
-        width: 30%
+        width: 35%
+        min-width: 35%
+        max-width: 35%
         text-align: center
         position: relative
         .total-price

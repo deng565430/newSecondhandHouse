@@ -214,7 +214,7 @@ export default {
       if ((this.posY - pos.y) <= -40) {
         if (!this.isShowBtn) {
           this.$refs.title.style.top = '0'
-          this.$refs.addImg.$el.style.bottom = '-2px'
+          this.$refs.addImg.$el.style.bottom = '-4px'
         }
         this.isShowBtn = true
       }
@@ -577,4 +577,5 @@ export default {
       transition: all .3s
       img
         width: 100%
+        height: 100%
 </style>

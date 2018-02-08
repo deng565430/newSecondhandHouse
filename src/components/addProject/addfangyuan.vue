@@ -644,7 +644,7 @@
       color: #fff
   .btn
     position: fixed
-    bottom: -2px
+    bottom: -4px
     img
       width: 100%
   .top

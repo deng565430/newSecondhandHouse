@@ -53,8 +53,9 @@ export default {
       display: flex
       .left
         flex: 3
-        max-width: 75%
-        min-width: 75%
+        max-width: 72%
+        min-width: 72%
+        overflow: hidden
         position: relative
         .matching
           position: absolute
@@ -101,8 +102,8 @@ export default {
             color: #0096ff
             border: 1px solid #0096ff
       .right
-        min-width: 25%
-        max-width: 25%
+        min-width: 28%
+        max-width: 28%
         padding-top: 25px
         text-align: right
         position: relative
@@ -118,12 +119,12 @@ export default {
           img
             width: 35px
         .price
-          color: #8a8a8a    
+          color: #8a8a8a
         .send
           .btn
             margin: 10px 0
             display: inline-block
-            padding: 5px 10px
+            padding: 3px 7px
             line-height: 25px
             border-radius: 3px
           .bgc

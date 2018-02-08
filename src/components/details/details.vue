@@ -52,8 +52,8 @@
             <p>{{remark}}</p>
           </div>
           <div class="bottom-b">
-            <p class="flex-1">发布于：<span>{{createTime}}</span></p>
-            <p class="flex-1">发布人：<span>{{brokerName}}</span></p>
+            <p class="flex-2">发布于：<span>{{createTime}}</span></p>
+            <p class="flex-2">发布人：<span>{{brokerName}}</span></p>
             <p class="send-btn" v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
             <p class="send-btn" v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
             <p class="send-btn" v-else></p>
@@ -278,7 +278,7 @@ export default {
         margin: 10px 0
         padding: 10px 10px
         background: #fff
-        .flex-1
+        .flex-2
           flex: 2
           color: #a7a7a7
           line-height: 35px

@@ -48,11 +48,11 @@
             <p>{{msg}}</p>
           </div>
           <div class="bottom-b">
-            <p class="flex2">发布于：<span>{{createTime}}</span></p>
-            <p class="flex1">发布人：<span>{{brokerName}}</span></p>
-            <p class="flex1" v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
-            <p class="flex1" v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
-            <p class="flex1" v-else>已停止</p>
+            <p class="flex-2">发布于：<span>{{createTime}}</span></p>
+            <p class="flex-2">发布人：<span>{{brokerName}}</span></p>
+            <p class="send-btn" v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
+            <p class="send-btn" v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
+            <p class="send-btn" v-else>已停止</p>
           </div>
         </div>
       </div>
@@ -162,6 +162,7 @@ export default {
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
+@import "~common/stylus/mixin"
 .look-project
   position: fixed
   width: 100%
@@ -251,18 +252,18 @@ export default {
         margin: 10px 0
         padding: 10px 10px
         background: #fff
-        .flex2
-          flex: 9
-        .flex1
-          flex: 7
-        p
+        .flex-2
+          flex: 2
           color: #a7a7a7
           line-height: 35px
+          no-wrap()
           &:last-child
             line-height: 35px
             text-align: right
           span
             color: #6c6c6c
+          .send-btn
+            flex: 1
         .btn
           display: inline-block
           padding: 5px 10px
