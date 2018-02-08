@@ -10,9 +10,9 @@
       <div class="is-my" v-if="item.ismy === 1">
         <img :src="isMy" alt="">
       </div>
-      <div class="warp" 
-        @touchstart="touchstart" 
-        @touchend="touchend" 
+      <div class="warp"
+        @touchstart="touchstart"
+        @touchend="touchend"
         v-if="item.showMore">
         <scroll
           class="scroll"
@@ -31,7 +31,8 @@
             <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: item.phone, name: childItem.name, operate: 1, index }}" v-if="item.child && item.child.length > 0" :key="childItem.name" v-for="childItem in item.child" class="list">
               <li class="left">
                 <div v-if="childItem.suitability" class="matching">
-                  <p>{{childItem.suitability}}分</p>
+                  <p>匹配度</p>
+                  <p>{{childItem.suitability}}%</p>
                 </div>
                 <p class="describe">{{childItem.remark}}</p>
                 <p class="name"><span>{{childItem.region}}</span><span>{{childItem.huxing}}</span><span v-if="childItem.area">{{childItem.area + '㎡'}}</span></p>
@@ -225,6 +226,7 @@ export default {
           top: 20px
           border-radius: 50%
           overflow: hidden
+          padding-top: 14px
           border: 1px solid #f7722a
           width: 55px
           height: 55px
@@ -232,7 +234,6 @@ export default {
           text-align: center
           font-size: $font-size-medium
           p
-            line-height: 55px
             color: #f7722a
         >p
           line-height: 25px
@@ -273,7 +274,7 @@ export default {
           font-size: $font-size-large-x
           line-height: 30px
         .price
-          color: #8a8a8a  
+          color: #8a8a8a
         .send
           .btn
             margin: 10px 0

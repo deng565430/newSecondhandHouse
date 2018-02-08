@@ -48,7 +48,7 @@
             <p>{{msg}}</p>
           </div>
           <div class="bottom-b">
-            <p class="flex2">发布于：<span>{{createtime}}</span></p>
+            <p class="flex2">发布于：<span>{{createTime}}</span></p>
             <p class="flex1">发布人：<span>{{brokerName}}</span></p>
             <p class="flex1" v-if="brokerPhone && isMy === 0" @click="telPhone(brokerPhone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
             <p class="flex1" v-else-if="brokerPhone" @click="stop" ><span class="btn bgc" >停止需求</span></p>
@@ -94,7 +94,7 @@ export default {
       ensure: '',
       decoration: '',
       msg: '',
-      createtime: '',
+      createTime: '',
       needName: null
     }
   },
@@ -146,7 +146,7 @@ export default {
           this.ensure = res.data.data.ensure || '(未填)'
           this.decoration = res.data.data.decoration || '(未填)'
           this.msg = res.data.data.remark
-          this.createtime = res.data.data.createTime
+          this.createTime = res.data.data.createTime
           this.brokerName = res.data.data.brokerName
           this.brokerPhone = res.data.data.brokerPhone
         }
@@ -278,5 +278,5 @@ export default {
     bottom: -2px
     transition: all .3s
     img
-      width: 100%        
+      width: 100%
 </style>

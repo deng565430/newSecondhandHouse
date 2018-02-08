@@ -1,13 +1,25 @@
 // 打点页面及按钮规则
 export default {
-  // 二手房市场页面
-  'HOME': 'P020',
-  // 我的列表
-  'MYPROPAGE': 'P025',
-  // 发布客源
-  'ADDKEYUAN': 'P027',
-  // 发布房源
-  'ADDFANGYUAN': 'P026',
-  // 二手房详情
-  'ERSHOUFANGXIANGQING': 'P024'
+  // 房源市场页面
+  'FANGYUANPAGE': 'P041',
+  // tab切换 （经纪人）
+  'TAB1': 'B084',
+  // tab切换 （房源）
+  'TAB2': 'B085',
+  // 发布客源按钮
+  'SENDKEYUANBTN': 'B090',
+  // 经纪人列表page
+  'JINGJIRENPAGE': 'P049',
+  // 联系TA按钮
+  'LISTPAGENBTN': 'B089',
+  // 列表每条信息查看
+  'LISTITEM': 'B087',
+  // 房源列表page
+  'FANGYUANLISTPAGE': 'P050',
+  // 房源详情页
+  'FANGYUANDETAILPAGE': 'P044',
+  // 发布二手房客源页面
+  'SENDKEYUANPAGE': 'P045',
+  // 提交客源按钮
+  'SENDKEYUANBTN': 'B107'
 }

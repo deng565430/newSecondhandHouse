@@ -1,7 +1,7 @@
 <template>
 <div id="recommendList">
   <div class="title" ref="title">
-    <my-title :title="'房源市场'"></my-title>
+    <my-title :title="'二手房源市场'"></my-title>
     <!-- <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
       <p>我的 <i class="icon-people2"></i></p>
     </router-link> -->
@@ -188,7 +188,7 @@ export default {
       this.noResultWrapper = ''
       if (!this.isShowBtn) {
         this.$refs.title.style.top = '0'
-        this.$refs.addImg.$el.style.bottom = '-2px'
+        this.$refs.addImg.$el.style.bottom = '-4px'
       }
       this.isShowBtn = true
       this.selectData(true)
@@ -200,7 +200,7 @@ export default {
       if (pos.y === 0) {
         if (!this.isShowBtn) {
           this.$refs.title.style.top = '0'
-          this.$refs.addImg.$el.style.bottom = '-2px'
+          this.$refs.addImg.$el.style.bottom = '-4px'
         }
         this.isShowBtn = true
       }
@@ -344,7 +344,7 @@ export default {
     // 下拉加载
     searchMore () {
       if (this.hasSelect()) {
-        this.noResultWrapper = '没有更多了'
+        this.noResultWrapper = '无更多推荐了，以上是经筛选的优质房源'
         return
       }
       if (this.showNoProjectImg) {
@@ -573,7 +573,7 @@ export default {
         width: 100%
     .add-img
       position: fixed
-      bottom: -2px
+      bottom: -4px
       transition: all .3s
       img
         width: 100%

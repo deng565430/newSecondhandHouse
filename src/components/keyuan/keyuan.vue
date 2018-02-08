@@ -332,7 +332,7 @@ export default {
         width: 100%
     .add-img
       position: fixed
-      bottom: -2px
+      bottom: -4px
       transition: all .3s
       img
         width: 100%
