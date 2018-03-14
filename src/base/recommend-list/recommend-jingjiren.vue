@@ -28,7 +28,7 @@
           @scrollToEnd="scrollToEnd"
           >
           <div>
-            <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: item.phone, name: childItem.name, operate: 1, index }}" v-if="item.child && item.child.length > 0" :key="childItem.name" v-for="childItem in item.child" class="list">
+            <ul @click="goDetail({phone: item.phone, name: childItem.name, operate: 1, index })" v-if="item.child && item.child.length > 0" :key="childItem.name" v-for="childItem in item.child" class="list">
               <li class="left">
                 <div v-if="childItem.suitability" class="matching">
                   <p>匹配度</p>
@@ -44,7 +44,7 @@
                 <p class="price" v-if="childItem.price">{{childItem.price + '元/m²'}}</p>
                 <p class="send" @click.stop.prevent="telPhone(childItem.phone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
               </li>
-            </router-link>
+            </ul>
             <loading v-show="item.hasMore" title="正在加载..."></loading>
             <div v-show="!item.hasMore" class="no-result-wrapper">
               <p>{{item.noResultWrapper}}</p>
@@ -60,6 +60,8 @@
 <script>
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   props: {
     projectList: {
@@ -136,8 +138,16 @@ export default {
       })
     },
     telPhone(phone) {
+      addLog(TYPE.FANGYUANPAGE, TYPE.LISTPAGE, TYPE.LISTPAGENBTN, '', window.USERMSG)
       if (!phone) return
       window.location.href = `tel:${phone}`
+    },
+    goDetail(data) {
+      addLog(TYPE.FANGYUANPAGE, TYPE.LISTPAGE, TYPE.LISTITEM, TYPE.FANGYUANDETAILPAGE, window.USERMSG)
+      this.$router.push({
+        path: '/seconddetail',
+        query: data
+      })
     }
   },
   beforeRouteLeave(to, from, next) {

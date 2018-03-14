@@ -1,5 +1,8 @@
 <template>
   <div class="look-project">
+    <div class="mengceng-img" v-if="mengcengFlag">
+      <img :src="mengcengImg" alt="" @click="hideMengceng">
+    </div>
     <div class="title">
       <my-title :title="'房源详情'"></my-title>
     </div>
@@ -62,10 +65,9 @@
       </div>
     </scroll>
     <confirm ref="confirm" :text="confirmText" ></confirm>
-    <router-link :to="operate !== '1' ? '/secondaddkeyuan' : '/secondaddfangyuan'" ref="addImg" class="add-img" @click="addKeyuan">
-      <img v-if="operate !== '1'" :src="fabukeyuanImg" alt="">
-      <img v-else :src="fabufangyuanImg" alt="">
-    </router-link>
+    <div ref="addImg" class="add-img" @click="addKeyuan">
+      <img :src="fabukeyuanImg" alt="">
+    </div>
   </div>
 </template>
 <script>
@@ -73,12 +75,16 @@ import MyTitle from 'base/title/title'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
 import { getRoomDetails, updateClientSourceStatus } from 'api/details'
+import { getFirstVisited } from 'api/getFirstVisited'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   data () {
     return {
       contactphone: require('common/image/contactphone.png'),
       fabukeyuanImg: require('common/image/sendkeyuanyuanbtn.jpg'),
-      fabufangyuanImg: require('common/image/sendfangyuanbtn.jpg'),
+      mengcengImg: require('common/image/detailmengceng.jpg'),
+      mengcengFlag: false,
       phone: this.$route.query.phone,
       name: this.$route.query.name,
       operate: this.$route.query.operate,
@@ -106,12 +112,27 @@ export default {
     }
   },
   created () {
+    // 判断是否是首次访问
+    getFirstVisited('sencondhandhousedetail').then(res => {
+      if (res.data.data === 0) {
+        this.mengcengFlag = true
+      }
+    })
     this._getRoomDetails()
   },
   methods: {
+    // 点击隐藏蒙层
+    hideMengceng () {
+      this.mengcengFlag = false
+    },
     telPhone (phone) {
+      addLog(TYPE.FANGYUANDETAILPAGE, '', TYPE.LISTPAGENBTN, '', window.USERMSG)
       if (!phone) return
       window.location.href = `tel:${phone}`
+    },
+    addKeyuan() {
+      addLog(TYPE.FANGYUANDETAILPAGE, '', TYPE.SENDKEYUANBTN, TYPE.SENDKEYUANPAGE, window.USERMSG)
+      this.$router.push('/secondaddkeyuan')
     },
     stop() {
       this.confirmText = '确定停止此项目？'
@@ -178,6 +199,17 @@ export default {
   height: 100%
   background: #eee
   font-size: $font-size-medium
+  .mengceng-img
+    position: fixed
+    z-index: 999999
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    width: 100%
+    img
+      width: 100%
+      height: 100%
   .title
     position: fixed
     z-index: 88

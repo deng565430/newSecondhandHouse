@@ -58,10 +58,9 @@
       </div>
     </scroll>
     <confirm ref="confirm" :text="confirmText" @confirm="confirm"></confirm>
-    <router-link :to="operate === '1' ? '/secondaddkeyuan' : '/secondaddfangyuan'" ref="addImg" class="add-img" @click="addKeyuan">
-      <img v-if="operate === '1'" :src="fabukeyuanImg" alt="">
-      <img v-else :src="fabufangyuanImg" alt="">
-    </router-link>
+    <div ref="addImg" class="add-img" @click="addFangyuan">
+      <img :src="fabufangyuanImg" alt="">
+    </div>
   </div>
 </template>
 <script>
@@ -69,11 +68,12 @@ import MyTitle from 'base/title/title'
 import Scroll from 'base/scroll/scroll'
 import Confirm from 'base/confirm/confirm'
 import { getsourcedetails, updateClientSourceStatus } from 'api/keyuandetails'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   data () {
     return {
       contactphone: require('common/image/contactphone.png'),
-      fabukeyuanImg: require('common/image/sendkeyuanyuanbtn.jpg'),
       fabufangyuanImg: require('common/image/sendfangyuanbtn.jpg'),
       id: this.$route.query.id,
       operate: this.$route.query.operate,
@@ -103,8 +103,14 @@ export default {
   },
   methods: {
     telPhone (phone) {
+      addLog(TYPE.KEYUANDETAIL, '', TYPE.LISTPAGENBTN, '', window.USERMSG)
       if (!phone) return
       window.location.href = `tel:${phone}`
+    },
+    // 添加房源
+    addFangyuan() {
+      addLog(TYPE.KEYUANDETAIL, '', TYPE.FABUKEYUAN, TYPE.SENDFANGYUANPAGE, window.USERMSG)
+      this.$router.push('/secondaddfangyuan')
     },
     stop() {
       this.confirmText = '确定停止此项目？'
@@ -168,12 +174,12 @@ export default {
   width: 100%
   bottom: 0
   height: 100%
-  z-index: 10000
+  z-index: 88
   background: #eee
   font-size: $font-size-medium
   .title
     position: fixed
-    z-index: 10002
+    z-index: 99
     width: 100%
     text-align: center
     line-height: 40px

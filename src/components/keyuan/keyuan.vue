@@ -49,9 +49,9 @@
   <div>
    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm" @cancel="cancel"></confirm>
   </div>
-  <router-link to="/secondaddfangyuan" class="add-img" @click="addKeyuan">
+  <div to="/secondaddfangyuan" class="add-img" @click="addFangyuan">
     <img :src="fabufangyuanImg" alt="">
-  </router-link>
+  </div>
 </div>
 </template>
 
@@ -72,6 +72,8 @@ import SelectBox from 'base/select-box/select-box'
 import PopBox from 'base/pop-box/pop-box'
 import { getfilter } from 'api/recommendList'
 import { getsourceitem } from 'api/keyuan'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   data () {
     return {
@@ -205,6 +207,11 @@ export default {
       this.projectList = []
       this.sendData.start = 0
       this._getsourceitem(this.sendData, true)
+    },
+    // 添加房源
+    addFangyuan() {
+      addLog(TYPE.KEYUANPAGE, '', TYPE.FABUKEYUAN, TYPE.SENDFANGYUANPAGE, window.USERMSG)
+      this.$router.push('/secondaddfangyuan')
     },
     confirm () {},
     cancel () {},

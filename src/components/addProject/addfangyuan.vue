@@ -163,6 +163,8 @@
   import Confirm from 'base/confirm/confirm'
   import { getProvincelist, getDistirctlist, getCitylist } from 'api/getCity'
   import { addClientRoom, getoption, getUserbyid } from 'api/addSelectList'
+  import TYPE from 'common/js/buryingpointType'
+  import { addLog } from 'api/buryingpoint'
   export default {
     data () {
       return {
@@ -272,6 +274,7 @@
         this.scrollY = pos.y
       },
       sendProject() {
+        addLog(TYPE.SENDFANGYUANPAGE, '', TYPE.SENDKEBTN, TYPE.KEYUANPAGE, window.USERMSG)
         let prov, city, district
         if (!this.other) {
           prov = this.defaultProvince

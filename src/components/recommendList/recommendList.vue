@@ -1,5 +1,8 @@
 <template>
 <div id="recommendList">
+  <div class="mengceng-img" v-if="mengcengFlag">
+    <img :src="mengcengImg" alt="" @click="hideMengceng">
+  </div>
   <div class="title" ref="title">
     <my-title :title="'二手房源市场'"></my-title>
     <!-- <router-link tag="div" :to="{ path: '/secondprojectlist' }" class="my-list">
@@ -7,7 +10,7 @@
     </router-link> -->
     <div class="item-bottom">
       <ul>
-        <li :key="item" v-for="(item, index) in itemSelectType" :class="itemSelectTypeActive === index ? 'active' : '' " @click="selectTypeList(item, index)"><span>{{item.type}}</span> <i :class="[itemSelectTypeActive === index ? 'icon-back-down': 'icon-back-up']"></i></li>
+        <li :key="item" v-for="(item, index) in itemSelectType" :class="itemSelectTypeActive === index ? 'active' : '' " @click="selectTypeList(item, index)"><span>{{item.type}}</span> <i :class="[itemSelectTypeActive === index ? 'icon-back-up': 'icon-back-down']"></i></li>
       </ul>
     </div>
     <div class="tab">
@@ -55,9 +58,9 @@
   <div>
    <confirm ref="confirm" :text="confirmText" :refresh="refresh" @confirm="confirm" @cancel="cancel"></confirm>
   </div>
-  <router-link to="/secondaddkeyuan" ref="addImg" class="add-img" @click="addKeyuan">
+  <div to="/secondaddkeyuan" ref="addImg" class="add-img" @click="addKeyuan">
     <img :src="fabukeyuanImg" alt="">
-  </router-link>
+  </div>
 </div>
 </template>
 
@@ -78,11 +81,15 @@ import Confirm from 'base/confirm/confirm'
 import SelectBox from 'base/select-box/select-box'
 import PopBox from 'base/pop-box/pop-box'
 import { getfilter, getbroker, getroomListbyphone } from 'api/recommendList'
+import { getFirstVisited } from 'api/getFirstVisited'
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   data () {
     return {
       fabukeyuanImg: require('common/image/sendkeyuanyuanbtn.jpg'),
       sorryNoProject: require('common/image/sorrynoproject.png'),
+      mengcengImg: require('common/image/homemengceng.jpg'),
       tabList: [
         {
           value: '经纪人(优选)',
@@ -104,6 +111,7 @@ export default {
         type: '总价'
       }],
       hasMore: true,
+      mengcengFlag: false,
       showNoProjectImg: false,
       noResultWrapper: '',
       projectList: [],
@@ -151,6 +159,12 @@ export default {
     }
   },
   created () {
+    // 判断是否是首次访问
+    getFirstVisited('sencondhandhouse').then(res => {
+      if (res.data.data === 0) {
+        this.mengcengFlag = true
+      }
+    })
     // 获取过滤条件
     getfilter().then(res => {
       if (res.data.code === 0) {
@@ -161,6 +175,10 @@ export default {
     this._getbroker({start: 0}, true)
   },
   methods: {
+    // 点击隐藏蒙层
+    hideMengceng () {
+      this.mengcengFlag = false
+    },
     // 获取单个经纪人的数据
     getAllData(data) {
       if (data.showMore) {
@@ -179,6 +197,11 @@ export default {
     },
     // tab切换
     selectTabActive(index) {
+      if (index === 0) {
+        addLog(TYPE.FANGYUANPAGE, '', TYPE.TAB1, '', window.USERMSG)
+      } else {
+        addLog(TYPE.FANGYUANPAGE, '', TYPE.TAB2, '', window.USERMSG)
+      }
       if (this.selectTabActiveIndex === index) {
         return
       }
@@ -195,26 +218,37 @@ export default {
       this.tabList.forEach(item => (item.active = false))
       this.tabList[index].active = true
     },
+    // 添加客源
+    addKeyuan() {
+      addLog(TYPE.FANGYUANPAGE, '', TYPE.SENDKEYUANBTN, TYPE.SENDKEYUANPAGE, window.USERMSG)
+      this.$router.push('/secondaddkeyuan')
+    },
     // 监听滚动事件
     scroll(pos) {
+      var title
+      var addImg
+      if (this.$refs.title && this.$refs.addImg) {
+        title = this.$refs.title
+        addImg = this.$refs.addImg
+      }
       if (pos.y === 0) {
         if (!this.isShowBtn) {
-          this.$refs.title.style.top = '0'
-          this.$refs.addImg.$el.style.bottom = '-4px'
+          title.style.top = '0'
+          addImg.style.bottom = '-4px'
         }
         this.isShowBtn = true
       }
       if ((this.posY - pos.y) >= 40) {
         if (this.isShowBtn) {
-          this.$refs.title.style.top = '-91px'
-          this.$refs.addImg.$el.style.bottom = '-72px'
+          title.style.top = '-91px'
+          addImg.style.bottom = '-72px'
         }
         this.isShowBtn = false
       }
       if ((this.posY - pos.y) <= -40) {
         if (!this.isShowBtn) {
-          this.$refs.title.style.top = '0'
-          this.$refs.addImg.$el.style.bottom = '-4px'
+          title.style.top = '0'
+          addImg.style.bottom = '-4px'
         }
         this.isShowBtn = true
       }
@@ -492,6 +526,17 @@ export default {
     z-index: 99
     background: #fefefe
     font-size: $font-size-medium
+    .mengceng-img
+      position: fixed
+      z-index: 999999
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      width: 100%
+      img
+        width: 100%
+        height: 100%
     .title
       position: fixed
       width: 100%

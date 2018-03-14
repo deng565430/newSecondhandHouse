@@ -1,6 +1,6 @@
 <template>
   <div class="recommend-list-right">
-    <router-link tag="ul" :to="{path: '/seconddetail', query: {phone: childItem.phone, name: childItem.name, operate: 1 }}" :key="childItem.name" v-for="childItem in projectList" class="list">
+    <ul  @click="goDetail({phone: childItem.phone, name: childItem.name, operate: 1})"  :key="childItem.name" v-for="childItem in projectList" class="list">
       <li class="left">
         <div v-if="childItem.suitability" class="matching">
           <p>{{childItem.suitability}}分</p>
@@ -15,11 +15,13 @@
         <p class="price">{{childItem.price + '元/㎡'}}</p>
         <p class="send" @click.stop.prevent="telPhone(childItem.call)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
       </li>
-    </router-link>
+    </ul>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import TYPE from 'common/js/buryingpointType'
+import { addLog } from 'api/buryingpoint'
 export default {
   props: {
     projectList: {
@@ -35,8 +37,16 @@ export default {
   },
   methods: {
     telPhone(phone) {
+      addLog(TYPE.FANGYUANPAGE, TYPE.FANGYUANLISTPAGE, TYPE.LISTPAGENBTN, '', window.USERMSG)
       if (!phone) return
       window.location.href = `tel:${phone}`
+    },
+    goDetail(data) {
+      addLog(TYPE.FANGYUANPAGE, TYPE.FANGYUANLISTPAGE, TYPE.LISTITEM, TYPE.FANGYUANDETAILPAGE, window.USERMSG)
+      this.$router.push({
+        path: '/seconddetail',
+        query: data
+      })
     }
   }
 }

@@ -3,7 +3,7 @@
     <div class="project-list" v-if="projectList.length">
         <ul>
           <li :key="item.sourceid" class="item" v-for="item in projectList">
-            <router-link :to="{path:'/secondkeyuandetail',query:{id: `${item.sourceid}`, operate: 2}}" tag="div" >
+            <div @click="goDetail({id: item.sourceid, operate: 2})" >
               <div class="item-top">
                 <p class="left">需求名称： <span>{{item.sourceid}}</span></p>
                 <p class="right">{{item.date}}</p>
@@ -23,7 +23,7 @@
                   <p class="send" v-if="item.phone" @click.stop.prevent="telPhone(item.phone)"><span class="btn bgc" >联系TA <img :src="contactphone" alt=""></span></p>
                 </div>
               </div>
-            </router-link>
+            </div>
           </li>
         </ul>
       </div>
@@ -31,6 +31,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import TYPE from 'common/js/buryingpointType'
+  import { addLog } from 'api/buryingpoint'
   export default {
     props: {
       projectList: {
@@ -55,8 +57,16 @@
         this.$emit('alertMsg', id)
       },
       telPhone(phone) {
+        addLog(TYPE.KEYUANPAGE, '', TYPE.LISTPAGENBTN, '', window.USERMSG)
         if (!phone) return
         window.location.href = `tel:${phone}`
+      },
+      goDetail(data) {
+        addLog(TYPE.KEYUANPAGE, '', TYPE.KEYUANLIST, TYPE.KEYUANDETAIL, window.USERMSG)
+        this.$router.push({
+          path: '/secondkeyuandetail',
+          query: data
+        })
       }
     }
   }
