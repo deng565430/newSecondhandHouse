@@ -159,6 +159,9 @@ export default {
     }
   },
   created () {
+    setTimeout(() => {
+      addLog(TYPE.FANGYUANPAGE, '', '', '', window.USERMSG)
+    }, 2000)
     // 判断是否是首次访问
     getFirstVisited('sencondhandhouse').then(res => {
       if (res.data.data === 0) {
